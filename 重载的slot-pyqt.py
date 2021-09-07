@@ -7,10 +7,7 @@ import sys
 class UIMyEditorDialog(QDialog):
     """
     总结要点：
-    1）父类只负责组装界面，使用QtCore.QMetaObject.connectSlotsByName(self) 设置好自动槽函数关联机制
-    2）父类创建的QT UI组件如果要有自动关联的槽函数需要使用setObjectName(name)设定一个实例的名字
-    3）子类中实现逻辑处理slot函数，也就是界面点击所emit的signal。此时pyqt5和pyside2稍有区别：
-       - pyqt5 的slot函数注解可有可无，但是pyside2中注解必须要有
+
     """
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -65,6 +62,8 @@ class MyDialog(UIMyEditorDialog):
         """
         print("italicCheckbox clicked ",  is_checked)
 
+    ##################################################################
+    # 下面2个函数会同时执行，也就是一个signal会同时发给这2个函数。这是pyside2目前无法做到的。
     @QtCore.pyqtSlot(int, name="on_spinBox_valueChanged")
     def spinBox_valueChanged_int(self, int_val):
         print("on_spinBox_valueChanged_int ", int_val)
@@ -72,6 +71,8 @@ class MyDialog(UIMyEditorDialog):
     @QtCore.pyqtSlot(str, name="on_spinBox_valueChanged")
     def spinBox_valueChanged_str(self, str_val):
         print("on_spinBox_valueChanged_str ", str_val)
+
+    ###################################################################
 
 
 if __name__=="__main__":

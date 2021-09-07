@@ -1,5 +1,5 @@
-from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication, QDialog, QVBoxLayout, QGroupBox, QPlainTextEdit, QHBoxLayout, QCheckBox, \
+from PySide2 import QtCore
+from PySide2.QtWidgets import QApplication, QDialog, QVBoxLayout, QGroupBox, QPlainTextEdit, QHBoxLayout, QCheckBox, \
     QRadioButton, QSpinBox
 import sys
 
@@ -7,10 +7,7 @@ import sys
 class UIMyEditorDialog(QDialog):
     """
     总结要点：
-    1）父类只负责组装界面，使用QtCore.QMetaObject.connectSlotsByName(self) 设置好自动槽函数关联机制
-    2）父类创建的QT UI组件如果要有自动关联的槽函数需要使用setObjectName(name)设定一个实例的名字
-    3）子类中实现逻辑处理slot函数，也就是界面点击所emit的signal。此时pyqt5和pyside2稍有区别：
-       - pyqt5 的slot函数注解可有可无，但是pyside2中注解必须要有
+    pyside2还无法像pyqt一样使用Slot(, name="on_objName_signal")来重载slot, 让2个slot同时执行
     """
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -57,7 +54,7 @@ class MyDialog(UIMyEditorDialog):
     def __init__(self, parent):
         super().__init__(parent)
 
-    @QtCore.pyqtSlot(bool)
+    @QtCore.Slot(bool)
     def on_italicCheckbox_clicked(self, is_checked):
         """
         这个函数也不会起作用的，Slot并不支持无参函数
@@ -65,13 +62,23 @@ class MyDialog(UIMyEditorDialog):
         """
         print("italicCheckbox clicked ",  is_checked)
 
-    @QtCore.pyqtSlot(int, name="on_spinBox_valueChanged")
-    def spinBox_valueChanged_int(self, int_val):
-        print("on_spinBox_valueChanged_int ", int_val)
-
-    @QtCore.pyqtSlot(str, name="on_spinBox_valueChanged")
-    def spinBox_valueChanged_str(self, str_val):
+    @QtCore.Slot(str)
+    def on_spinBox_valueChanged(self, str_val):
+        """
+        谁卸载后面谁起作用
+        :param str_val:
+        :return:
+        """
         print("on_spinBox_valueChanged_str ", str_val)
+
+    @QtCore.Slot(int)
+    def on_spinBox_valueChanged(self, int_val):
+        """
+        这个slot会响应。因为排在了后面，说明pyside2相比pyqt还有待成熟
+        :param int_val:
+        :return:
+        """
+        print("on_spinBox_valueChanged_int ", int_val)
 
 
 if __name__=="__main__":
