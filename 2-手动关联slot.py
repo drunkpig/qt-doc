@@ -12,7 +12,6 @@ class UIMyEditorDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.__setup_ui()
-        QtCore.QMetaObject.connectSlotsByName(self) # 这行代码写在父类还是子类对结果没有影响，那么写在父类里可以让逻辑部分更清晰
 
     def __setup_ui(self):
         self.v_layout = QVBoxLayout()
@@ -30,9 +29,6 @@ class UIMyEditorDialog(QDialog):
 
         self.ft_style_layout = QHBoxLayout()
         self.italicCheckbox = QCheckBox("斜体", self)
-        # 这句话真的不能少！！靠变量名字达不到效果，不妨尝试用一个注解来实现，这样代码更简洁+清晰
-        # 这个代码设置了这个italicCheckbox的名字，通过和QtCore.QMetaObject.connectSlotsByName的结合达到自动连接槽函数的目的。
-        self.italicCheckbox.setObjectName("italicCheckbox")
         self.bold_checkbox = QCheckBox("粗体",self)
         self.underline_checkbox = QCheckBox("下划线",self)
         self.ft_style_layout.addWidget(self.italicCheckbox)
@@ -53,32 +49,41 @@ class UIMyEditorDialog(QDialog):
 class MyDialog(UIMyEditorDialog):
     def __init__(self, parent):
         super().__init__(parent)
+        self.italicCheckbox.clicked.connect(self.on_italicCheckbox_clicked) # 斜体手动关联
+        self.spinBox.valueChanged[str].connect(self.on_spinBox_valueChanged_1)# pyside2虽然不支持QtCore.Slot中name参数重载，但是手工还是可以实现的
+        self.spinBox.valueChanged[int].connect(self.on_spinBox_valueChanged_2) # 点击spinBox，这2个都会被触发
 
-    @QtCore.Slot(bool)
+        # 下面这个执行时报错：IndexError: Signature valueChanged(int,QString) not found for signal: valueChanged
+        self.spinBox.valueChanged[int,str].connect(self.on_spinBox_valueChanged_2)
+
     def on_italicCheckbox_clicked(self, is_checked):
         """
-        这个函数也不会起作用的，Slot并不支持无参函数
         :return:
         """
         print("italicCheckbox clicked ",  is_checked)
 
-    @QtCore.Slot(str)
-    def on_spinBox_valueChanged(self, str_val):
+
+    def on_spinBox_valueChanged_1(self, str_val:str):
         """
-        谁卸载后面谁起作用
         :param str_val:
         :return:
         """
         print("on_spinBox_valueChanged_str ", str_val)
 
-    @QtCore.Slot(int)
-    def on_spinBox_valueChanged(self, int_val):
+    def on_spinBox_valueChanged_2(self, int_val:int):
         """
-        这个slot会响应。因为排在了后面，说明pyside2相比pyqt还有待成熟
         :param int_val:
         :return:
         """
         print("on_spinBox_valueChanged_int ", int_val)
+
+    def on_spinBox_valueChanged_3(self, int_val:int, str_val:str):
+        """
+        这个在执行时connect会绑定不成功，因为没有满足这个参数的列表的signal
+        :param int_val:
+        :return:
+        """
+        print("on_spinBox_valueChanged_int ", int_val, str_val)
 
 
 if __name__=="__main__":
