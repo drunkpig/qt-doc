@@ -74,8 +74,35 @@ class MyDialog(UIMyEditorDialog):
         print("on_spinBox_valueChanged_str ", str_val)
 
 
+
+
+def singleton(cls):
+    instances = {}
+    def getinstance():
+        if cls not in instances:
+            instances[cls] = cls()
+        return instances[cls]
+    return getinstance
+
+@singleton
+class MyClass:
+    def __init__(self, name):
+        self.name = name
+
+
+class Person(MyClass):
+    def __init__(self, name):
+        super().__init__(name)
+
+    def say(self):
+        print(self.name)
+
+
 if __name__=="__main__":
-    qtapp = QApplication(sys.argv)
-    dialog = MyDialog(None)
-    dialog.show()
-    qtapp.exec_()
+    # qtapp = QApplication(sys.argv)
+    # dialog = MyDialog(None)
+    # dialog.show()
+    # qtapp.exec_()
+    p = Person("lili")
+    p.say()
+
