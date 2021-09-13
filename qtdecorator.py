@@ -37,10 +37,13 @@ def autoconnect(clz):
             super().__init__(*args, **kwargs)
             QtCore.QMetaObject.connectSlotsByName(self)
             # 开始扫描本类QObject子类，然后调用之上的setObjectName("控件名字")
-
-            qobjects =  inspect.getmembers(clz, lambda o: is_subclz(o, QPushButton))
-            for i in qobjects:
+            variables = [i for i in dir(clz) if not inspect.ismethod(i)]
+            for i in variables:
                 print(i)
+            #
+            # qobjects =  inspect.getmembers(clz, lambda o: is_subclz(o, QPushButton))
+            # for i in qobjects:
+            #     print(i)
 
     return auto_connect
 
