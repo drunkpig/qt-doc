@@ -28,23 +28,22 @@ def autoconnect(clz):
     """
     def is_subclz(o, clz):
         instance_type = type(o).__name__
-        print(instance_type)
+        # print(instance_type)
         b = isinstance(o, QPushButton)
         return b
 
     class auto_connect(clz):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            QtCore.QMetaObject.connectSlotsByName(self)
-            # 开始扫描本类QObject子类，然后调用之上的setObjectName("控件名字")
-            variables = [i for i in dir(clz) if not inspect.ismethod(i)]
-            for i in variables:
-                print(i)
-            #
-            # qobjects =  inspect.getmembers(clz, lambda o: is_subclz(o, QPushButton))
-            # for i in qobjects:
-            #     print(i)
 
+            # 开始扫描本类QObject子类，然后调用之上的setObjectName("控件名字")
+            classes = inspect.getmembers(self, lambda o: is_subclz(o, QObject))
+            for c in classes:
+                obj_name = c[0]
+                obj_instance = c[1]
+                obj_instance.setObjectName(obj_name) # objectName就是变量的名字
+
+            QtCore.QMetaObject.connectSlotsByName(self) # 这行代码必须写在setObjectName之后，否则也不起作用
     return auto_connect
 
 
@@ -57,7 +56,7 @@ class UIMyEditorDialog(QDialog):
     def __setup_ui(self):
         layout = QVBoxLayout()
         self.btn = QPushButton("click me")
-        self.btn.setObjectName("btn")
+        # self.btn.setObjectName("btn") # 这一行也无需再写
         layout.addWidget(self.btn)
         self.setLayout(layout)
 
