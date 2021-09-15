@@ -1,4 +1,4 @@
-# PC PROXY
+# QT
 
 
 ## QT references

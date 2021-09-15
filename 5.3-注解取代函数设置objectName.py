@@ -24,7 +24,7 @@ class UIMyEditorDialog(QDialog):
     def __setup_ui(self):
         layout = QVBoxLayout()
         self.btn = QPushButton("click me")
-        self.btn.setObjectName("btn") # 这里还有一个代码，比较多余
+        #self.btn.setObjectName("btn") # 这行可以不用要了
         layout.addWidget(self.btn)
         self.setLayout(layout)
 

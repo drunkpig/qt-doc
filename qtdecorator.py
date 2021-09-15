@@ -4,7 +4,8 @@
 2，扫描
 
 """
-import sys, inspect
+import inspect
+import sys, pyreflect
 
 from PySide2 import QtCore
 from PySide2.QtCore import QObject
