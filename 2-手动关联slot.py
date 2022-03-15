@@ -54,7 +54,7 @@ class MyDialog(UIMyEditorDialog):
         self.spinBox.valueChanged[int].connect(self.on_spinBox_valueChanged_2) # 点击spinBox，这2个都会被触发
 
         # 下面这个执行时报错：IndexError: Signature valueChanged(int,QString) not found for signal: valueChanged
-        self.spinBox.valueChanged[int,str].connect(self.on_spinBox_valueChanged_2)
+        # self.spinBox.valueChanged[int,str].connect(self.on_spinBox_valueChanged_2)
 
     def on_italicCheckbox_clicked(self, is_checked):
         """

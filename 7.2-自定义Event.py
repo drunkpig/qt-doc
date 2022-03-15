@@ -88,6 +88,3 @@ if __name__=="__main__":
     dialog = MyEditorDialog(None)
     dialog.show()
     qtapp.exec_()
-
-
-
