@@ -33,4 +33,4 @@ qt creator https://d13lb3tujbc8s0.cloudfront.net/onlineinstallers/qt-unified-win
 - https://www.riverbankcomputing.com/static/Docs/PyQt5/signals_slots.html
 - https://blog.51cto.com/u_9291927/2422187
 - https://www.cnblogs.com/lsgxeva/p/12636756.html
-
+- [QMetaObject::connectSlotsByName()注意事项](https://blog.csdn.net/qq_43058397/article/details/121047314 )
